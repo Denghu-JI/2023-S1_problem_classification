@@ -1,0 +1,71 @@
+name: (Archived) Build
+
+on:     # we won't build wheels in future distributions
+  workflow_dispatch:
+  # push:
+  #   branches: main
+  #   paths:
+  #     - 'src/cofi_espresso/**'
+  #     - 'contrib/**'
+  #     - 'pyproject.toml'
+  #     - 'setup.py'
+  # pull_request:
+  #   paths:
+  #     - 'src/cofi_espresso/**'
+  #     - 'contrib/**'
+  #     - 'pyproject.toml'
+  #     - 'setup.py'
+
+jobs:
+  build_wheels_non_windows:
+    if: github.repository_owner == 'inlab-geo'
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Symlink gfortran (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          # make sure gfortran is available
+          # https://github.com/actions/virtual-environments/issues/2524
+          # https://github.com/actions/runner-images/blob/macOS-12/20221215.1/images/macos/macos-12-Readme.md
+          sudo ln -s /usr/local/bin/gfortran-11 /usr/local/bin/gfortran
+          sudo mkdir /usr/local/gfortran
+          sudo ln -s /usr/local/Cellar/gcc@11/*/lib/gcc/11 /usr/local/gfortran/lib
+          gfortran --version
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get tags
+        run: |
+          git fetch --tags origin
+          git describe
+
+      - uses: actions/setup-python@v3
+
+      - name: Generate package source with contributions
+        run: |
+          python -m pip install -r envs/requirements_test.txt
+          python tools/build_package/build.py
+
+      - name: Build wheels
+        run: python -m cibuildwheel --output-dir wheelhouse
+        working-directory: _esp_build
+        env:
+          CIBW_SKIP: pp* *-win32 *-manylinux_i686 *-musllinux_*
+          CIBW_ARCHS_MACOS: x86_64 arm64
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
+          # Run the tests.
+          # CIBW_TEST_COMMAND: >
+          #   python -m pip install pytest &&
+          #   python {project}/tools/build_package/validate.py --post
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: _esp_build/wheelhouse/*.whl
