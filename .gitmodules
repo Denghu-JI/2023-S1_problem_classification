@@ -1,0 +1,3 @@
+[submodule "classification_utility/pysearch_tool/cofi"]
+	path = classification_utility/pysearch_tool/cofi
+	url = https://github.com/Denghu-JI/cofi.git
