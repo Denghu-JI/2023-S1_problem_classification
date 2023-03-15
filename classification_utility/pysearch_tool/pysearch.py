@@ -1,3 +1,4 @@
+#pysearch Python 3.10
 import git
 import subprocess
 import pathlib
