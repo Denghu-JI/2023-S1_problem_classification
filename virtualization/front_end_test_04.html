@@ -6,6 +6,14 @@
   <!-- Add styles to define the appearance of the page-->
   <style>
     /* Set the font, backgroud, and layout for the entire body */
+.font > p{
+  font-size: 80px;
+  text-shadow: 0 0 2px black;
+  color: linear-gradient(135deg, #83a4d4, #b6fbff);
+  margin-top: -330px;
+  margin-left: -560px;
+}
+
 body {
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #83a4d4, #b6fbff);
@@ -88,15 +96,28 @@ hr {
     <input type="text" id="description" name="description">
     <hr>
     <!-- Button to call the callBackend function -->
-    <button onclick="callBackend()">Return the methods tree</button>                                                       
+    <button onclick="callBackend()">Return the Methods Tree</button>                                                       
     <hr>
     <!-- Redirect to the Github -->
     <form action="https://github.com/Denghu-JI/2023-S1_problem_classification" method="get">
-      <button type="submit">Our code</button>
+      <button type="submit">Our Code </button>
     </form>
   </div>
+
+  <div class="font">
+    <p>
+      <i>CLASSIFICATION</i><br>
+    </p>
+  </div>
+
   <!-- Create an unordered list to display the methods list -->
   <ul id = "methods"></ul>
+
+  <img src="InLabLogo.webp" alt="InLab LOGO" width="150" height="50" style="position
+  :relative; margin-top: -570px;">
+  <img src="COFIandEspresso.jpeg" alt="COFIandEspresso Picture" width="290" height="290" style="position
+  :relative; margin-left: -280px; margin-bottom: -120px;">
+
   <!-- Add JavaScript code to handle button click event and fetch methods list from the backend -->
   <script>
     //define the callBackedn() function
