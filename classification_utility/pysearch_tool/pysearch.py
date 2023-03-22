@@ -1,11 +1,13 @@
-#pysearch Python 3.10
+#name
+#cofi -> balabal -> foo -> bar
+# sghdovhs;dugh
 import git
 import subprocess
 import pathlib
 import os
 
 
-#please specify cofi methods folder!
+#please specify those folder!
 methods_path = "cofi/src/cofi/tools"
 applications_path = "espresso/contrib"
 problems_path = "cofi-examples/..."
@@ -43,7 +45,7 @@ class pysearch:
                 print(method)
                 print(r.readline().strip('\n'))
 
-        #applications in espresso
+        # #applications in espresso
         for root, dirs, files in os.walk(self._app_path):
             if root == self._app_path:
                 for dir in dirs:
