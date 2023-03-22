@@ -10,7 +10,7 @@ import os
 #please specify those folder!
 methods_path = "cofi/src/cofi/tools"
 applications_path = "espresso/contrib"
-problems_path = "cofi-examples/..."
+problems_path = "cofi-examples/examples"
 
 app_info_name = 'README.md'
 
