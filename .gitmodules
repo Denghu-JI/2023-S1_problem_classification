@@ -1,9 +1,9 @@
 [submodule "classification_utility/pysearch_tool/cofi"]
 	path = classification_utility/pysearch_tool/cofi
-	url = https://github.com/inlab-geo/cofi.git
+	url = https://github.com/Denghu-JI/cofi.git
 [submodule "classification_utility/pysearch_tool/espresso"]
 	path = classification_utility/pysearch_tool/espresso
-	url = https://github.com/inlab-geo/espresso.git
+	url = https://github.com/Denghu-JI/espresso.git
 [submodule "classification_utility/pysearch_tool/cofi-examples"]
 	path = classification_utility/pysearch_tool/cofi-examples
-	url = https://github.com/inlab-geo/cofi-examples.git
+	url = https://github.com/Denghu-JI/cofi-examples.git

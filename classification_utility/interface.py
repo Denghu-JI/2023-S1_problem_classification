@@ -27,7 +27,7 @@ def main():
         pbar.update(10)
 
         tokens3 = ["pygimli_dcip_century_tri_mesh.ipynb, DCIP, 370602 Electrical and electromanetic methods in geophysics, 3706 Geophysics, 37 Earth Sciences"]
-        atre = atre.insert(atre.token3[::-1])
+        atre = insert(atre, tokens3[::-1])
 
     cmd = " "
     current_node = tre
