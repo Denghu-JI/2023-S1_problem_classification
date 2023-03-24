@@ -57,7 +57,6 @@ def insert(tre, lst):
         if len(lst)!= 1:
             token = lst.pop(0)
             if token == tre.me():
-                print(1)
                 flag = False
                 child = lst[0]
                 for token in tre.children():
@@ -70,19 +69,15 @@ def insert(tre, lst):
                     tre.add_child(node)
         return tre
 
-def create_monk(tokens1,tokens2):
-    id = 0
-    for token in tokens2 + tokens1:
-        if token not in tokens.values():
-            tokens[id] = token
-            id += 1
-    print(tokens)
-tokens1 = ['cofi_simple_newton', 'simple Newton step', 'InLab', 'non-linear', 'optimization', 'parameter estimation', 'CoFI']
-tokens2 = ['pygimli_dcip_century_tri_mesh.ipynb', 'Newton conjugate gradient trust-region algorithm (trust-ncg)', 'scipy.optimize.minimize',  'non-linear', 'optimization', 'parameter estimation', 'CoFI']
-create_monk(tokens1,tokens2)
+#----------------------test
+
+# tokens1 = ['cofi_simple_newton', 'simple Newton step', 'InLab', 'non-linear', 'optimization', 'parameter estimation', 'CoFI']
+# tokens2 = ['pygimli_dcip_century_tri_mesh.ipynb', 'Newton conjugate gradient trust-region algorithm (trust-ncg)', 'scipy.optimize.minimize',  'non-linear', 'optimization', 'parameter estimation', 'CoFI']
+
+# tre = hirc_tree('CoFI', [])
+
+# t = insert(tre, tokens1[::-1])
+# t1 = insert(t, tokens1[::-1])
 
 
-tre = hirc_tree('CoFI', [])
-
-t = insert(tre, tokens1[::-1])
-print(t.children()[0].children()[0].me())
+# print(t1.children()[0].children()[0].me())
