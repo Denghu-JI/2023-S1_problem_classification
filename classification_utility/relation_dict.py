@@ -42,6 +42,8 @@ class hirc_tree:
         """
         self._me = me
         self._children = children
+        self._path = None
+        self._description = None
 
     def me(self):
         return self._me
@@ -51,8 +53,21 @@ class hirc_tree:
     
     def add_child(self, node):
         self._children.append(node)
+    
+    def add_description(self, des):
+        self._description = des
+    
+    def add_path(self, path):
+        self._path = path
+    
+    def description(self):
+        return self._description
+    
+    def path(self):
+        return self._path
 
-def insert(tre, lst):
+def insert(tre, method):
+        lst = method.tree()
         if len(lst)!= 1:
             token = lst.pop(0)
             if token == tre.me():
@@ -60,12 +75,16 @@ def insert(tre, lst):
                 child = lst[0]
                 for token in tre.children():
                     if child == token.me():
-                        insert(token, lst)
+                        insert(token, method)
                         flag = True
                 if not flag:
                     node = hirc_tree(child, [])
-                    insert(node, lst)
+                    insert(node, method)
                     tre.add_child(node)
+        else:
+            tre.add_description(method.des())
+            tre.add_path(method.path())
+            
         return tre
 
 #----------------------test
