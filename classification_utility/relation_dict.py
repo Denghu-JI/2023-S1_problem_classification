@@ -36,8 +36,7 @@ class hirc_tree:
         ----------------
         me : str
             current leaf name
-        parent : [hirc_tree]
-            current leaf's parent
+       
         child : [hirc_tree]
             current leaf's children
         """
