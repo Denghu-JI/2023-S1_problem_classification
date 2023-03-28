@@ -1,7 +1,4 @@
-#name
-#cofi -> balabal -> foo -> bar
-# sghdovhs;dugh
-import git
+# import git
 import subprocess
 import pathlib
 import os
