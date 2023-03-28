@@ -36,7 +36,7 @@ class pysearch:
         #inference methods in cofi
         for _, _, files in os.walk(self._method_path):
             for method in files:
-                if method not in ignore_list:
+                if method not in ignore:
                     r = open(self._method_path + '/' + method)
                     #current plan, read the hierarchial information in the first line
                     method_name = r.readline().strip('\n')[11:]
