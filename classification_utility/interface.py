@@ -19,7 +19,7 @@ def main():
     apps_tree = hirc_tree('37 Earth Sciences', [])
 
     for i in p.mds():
-        tre = insert(tre,i)
+        method_tree = insert(method_tree,i)
 
 
     # with tqdm(total=50) as pbar:
