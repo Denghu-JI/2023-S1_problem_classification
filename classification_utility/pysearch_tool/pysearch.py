@@ -63,13 +63,10 @@ class pysearch:
                     if dirr not in ignore:
                         app_path = self._app_path + '/' + dirr + '/' + dirr + '.py'
                         if os.path.exists(app_path):
-                            r = open(app_path)
                             app_name = r.readline().strip('\n')[2:]
-                            print(app_name)
                             app_tree = r.readline().strip('\n')[2:].split(" -> ")
                             app_des = r.readline().strip('\n')[15:]
-                            print(app_des)
-                            # self._apps.append(App(name,y,z,d))
+                            self._apps.append(App(app_name,app_path,app_tree,app_des))
                             # self._apps.append({'name': app_name, 'path': app_path, 'description': app_des})
 
         # #applications in espresso
