@@ -64,7 +64,7 @@ def main():
             if not flag:
                 print("no such child!")
         elif cmd == "reset":
-            current_node = tre
+            current_node = method_tree
         elif cmd == "back":
             if len(last_node) == 0:
                 print("cannot go back")
