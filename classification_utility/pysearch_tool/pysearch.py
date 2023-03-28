@@ -13,7 +13,8 @@ applications_path = "espresso/contrib"
 problems_path = "cofi-examples/examples"
 ignore_list = ['__init__.py', '_base_inference_tool.py']
 
-app_info_name = 'README.md'
+ignore = ['slug_test', 'pumping_test', 'simple_regression', '']
+
 
 
 class pysearch:
@@ -36,8 +37,13 @@ class pysearch:
         self._app_path = app_path
         self._prob_path = prob_path
         self._methods = []
+        self._apps = []
+
     def mds(self):
         return self._methods
+    
+    def aps(self):
+        return self._apps
 
     def search(self):
         #inference methods in cofi
@@ -52,6 +58,18 @@ class pysearch:
                     des = r.readline().strip('\n')[2:]
                     self._methods.append(Method(method_name, method_path, method_tree,des))
                 
+
+        for root, dirs, files in os.walk(self._app_path):
+            if root == self._app_path:
+                for dirr in dirs:
+                    if dirr not in ignore:
+                        app_path = self._app_path + '/' + dirr + '/' + dirr + '.py'
+                        if os.path.exists(app_path):
+                            app_name = r.readline().strip('\n')[2:]
+                            app_tree = r.readline().strip('\n')[2:].split(" -> ")
+                            app_des = r.readline().strip('\n')[15:]
+                            self._apps.append(App(app_name,app_path,app_tree,app_des))
+                            # self._apps.append({'name': app_name, 'path': app_path, 'description': app_des})
 
         # #applications in espresso
         # for root, dirs, files in os.walk(self._app_path):
@@ -92,20 +110,38 @@ class Method:
     
     def des(self):
         return self._des
+    
+class App:
+    def __init__(self, name, path, tree, des):
+        """
+        A single Method defination.
+
+        Parameters
+        -----------
+        name : str
+            method name
+        path : str
+            method file path
+        tree : list
+            tree path of the method
+        """
+        self._name = name
+        self._path = path
+        self._tree = tree
+        self._des = des
+    
+    def name(self):
+        return self._name
+    
+    def path(self):
+        return self._path
+    
+    def tree(self):
+        return self._tree
+    
+    def des(self):
+        return self._des
             
-
-
-
-# #----git sync-------------------------
-# # path : current path 
-# # git_path : root project git path
-# path = pathlib.Path().resolve()
-# git_path = '/'.join(str(path).split('/')[:-2])
-# repo = git.Repo(git_path)
-# for submodule in repo.submodules:
-#     submodule.update(init=True)
-#---------------------------------------
-
 #path to methods. applications and problems
 methods_prefix = methods_path
 #ToDO: create other two prefix
