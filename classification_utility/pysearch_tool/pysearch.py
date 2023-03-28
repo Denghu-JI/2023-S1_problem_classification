@@ -4,16 +4,6 @@ import pathlib
 import os
 
 
-#please specify those folder!
-methods_path = "cofi/src/cofi/tools"
-applications_path = "espresso/contrib"
-problems_path = "cofi-examples/examples"
-ignore_list = ['__init__.py', '_base_inference_tool.py']
-
-ignore = ['slug_test', 'pumping_test', 'simple_regression', '']
-
-
-
 class pysearch:
     def __init__(self, methods_path, app_path,prob_path):
         """
@@ -42,7 +32,7 @@ class pysearch:
     def aps(self):
         return self._apps
 
-    def search(self):
+    def search(self,ignore):
         #inference methods in cofi
         for _, _, files in os.walk(self._method_path):
             for method in files:
@@ -139,19 +129,6 @@ class App:
     def des(self):
         return self._des
             
-#path to methods. applications and problems
-methods_prefix = methods_path
-#ToDO: create other two prefix
 
-# for _, _, files in os.walk(methods_path):
-#     for method in files[:-2]:
-#         r = open(methods_path + '/' + method)
-#         print(method)
-#         print(r.readline().strip('\n'))
-#         print("this is it!")
-
-p = pysearch(methods_path,applications_path,problems_path)
-p.search()
-    
 
     

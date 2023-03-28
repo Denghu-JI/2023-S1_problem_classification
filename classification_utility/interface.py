@@ -3,10 +3,18 @@ from tqdm import tqdm
 from pysearch_tool import pysearch
 
 
+#please specify those folder!
+methods_path = "cofi/src/cofi/tools"
+applications_path = "espresso/contrib"
+problems_path = "cofi-examples/examples"
+ignore_list = ['__init__.py', '_base_inference_tool.py']
+
+ignore = ['slug_test', 'pumping_test', 'simple_regression', '']
+
 
 def main():
     p = pysearch.pysearch(methods_path,applications_path,problems_path)
-    p.search()
+    p.search(ignore)
     method_tree = hirc_tree('CoFI', [])
     apps_tree = hirc_tree('37 Earth Sciences', [])
 
