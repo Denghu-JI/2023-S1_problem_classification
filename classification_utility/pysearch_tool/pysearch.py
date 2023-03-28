@@ -11,6 +11,7 @@ import os
 methods_path = "cofi/src/cofi/tools"
 applications_path = "espresso/contrib"
 problems_path = "cofi-examples/examples"
+ignore_list = ['__init__.py', '_base_inference_tool.py']
 
 app_info_name = 'README.md'
 
@@ -41,14 +42,15 @@ class pysearch:
     def search(self):
         #inference methods in cofi
         for _, _, files in os.walk(self._method_path):
-            for method in files[:-2]:
-                r = open(self._method_path + '/' + method)
-                #current plan, read the hierarchial information in the first line
-                method_name = r.readline().strip('\n')[11:]
-                method_path = self._method_path + '/' + method
-                method_tree = r.readline().strip('\n')[2:].split(" -> ")
-                des = r.readline().strip('\n')[2:]
-                self._methods.append(Method(method_name, method_path, method_tree,des))
+            for method in files:
+                if method not in ignore_list:
+                    r = open(self._method_path + '/' + method)
+                    #current plan, read the hierarchial information in the first line
+                    method_name = r.readline().strip('\n')[11:]
+                    method_path = self._method_path + '/' + method
+                    method_tree = r.readline().strip('\n')[2:].split(" -> ")
+                    des = r.readline().strip('\n')[2:]
+                    self._methods.append(Method(method_name, method_path, method_tree,des))
                 
 
         # #applications in espresso

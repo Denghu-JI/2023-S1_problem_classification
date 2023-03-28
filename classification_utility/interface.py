@@ -86,6 +86,8 @@ def main():
     # print("Loading the tree!")
     # #---------------------------------
 
+#designing API for Visualization
+# A node : name, position(parents, children), info(description)
 
 if __name__ == "__main__": 
     main()
