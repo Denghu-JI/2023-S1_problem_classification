@@ -4,9 +4,9 @@ from pysearch_tool import pysearch
 
 
 #please specify those folder!
-methods_path = "cofi/src/cofi/tools"
-applications_path = "espresso/contrib"
-problems_path = "cofi-examples/examples"
+methods_path = "pysearch_tool/cofi/src/cofi/tools"
+applications_path = "pysearch_tool/espresso/contrib"
+problems_path = "pysearch_tool/cofi-examples/examples"
 ignore_list = ['__init__.py', '_base_inference_tool.py']
 
 ignore = ['slug_test', 'pumping_test', 'simple_regression', '']
