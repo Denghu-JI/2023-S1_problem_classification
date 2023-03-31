@@ -28,7 +28,7 @@ tokens = {} #key: token id
 
 
 class hirc_tree:
-    def __init__(self, me, children):
+    def __init__(self, me):
         """
         relationship tree for as parsing result
 
@@ -41,7 +41,8 @@ class hirc_tree:
             current leaf's children
         """
         self._me = me
-        self._children = children
+        self._children = []
+        self._parent = None
         self._path = None
         self._description = None
 
@@ -51,8 +52,14 @@ class hirc_tree:
     def children(self):
         return self._children
     
+    def parent(self):
+        return self._parent
+    
     def add_child(self, node):
         self._children.append(node)
+
+    def add_parent(self, node):
+        self._parent = node
     
     def add_description(self, des):
         self._description = des
@@ -73,12 +80,13 @@ def insert(tre, method):
             if token == tre.me():
                 flag = False
                 child = lst[0]
-                for token in tre.children():
-                    if child == token.me():
-                        insert(token, method)
+                for tok in tre.children():
+                    if child == tok.me():
+                        insert(tok, method)
                         flag = True
                 if not flag:
-                    node = hirc_tree(child, [])
+                    node = hirc_tree(child)
+                    node.add_parent(token)
                     insert(node, method)
                     tre.add_child(node)
         else:
@@ -86,6 +94,8 @@ def insert(tre, method):
             tre.add_path(method.path())
             
         return tre
+
+
 
 #----------------------test
 
