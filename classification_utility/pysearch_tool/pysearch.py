@@ -36,14 +36,20 @@ class pysearch:
         #inference methods in cofi
         for _, _, files in os.walk(self._method_path):
             for method in files:
+                is_next = True
                 if method not in ignore:
                     r = open(self._method_path + '/' + method)
-                    #current plan, read the hierarchial information in the first line
-                    method_name = r.readline().strip('\n')[11:]
-                    method_path = self._method_path + '/' + method
-                    method_tree = r.readline().strip('\n')[2:].split(" -> ")
-                    des = r.readline().strip('\n')[2:]
-                    self._methods.append(Method(method_name, method_path, method_tree,des))
+                    while is_next:
+                        method_name = r.readline().strip('\n')
+                        print(method_name)
+                        if method_name[:8] == "# Method":
+                            method_name = method_name[11:]
+                            method_path = self._method_path + '/' + method
+                            method_tree = r.readline().strip('\n')[2:].split(" -> ")
+                            des = r.readline().strip('\n')[2:]
+                            self._methods.append(Method(method_name, method_path, method_tree,des))
+                        else:
+                            is_next = False
                 
 
         for root, dirs, files in os.walk(self._app_path):
