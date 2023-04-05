@@ -24,8 +24,11 @@ def main():
     for i in p.mds():
         method_tree = insert(method_tree,i)
 
+    for i in p.aps():
+        apps_tree = insert(apps_tree,i)
+
     cmd = " "
-    current_node = method_tree
+    current_node = apps_tree
     last_node = []
 
     while cmd != 'exit':
@@ -49,7 +52,7 @@ def main():
             if not flag:
                 print("no such child!")
         elif cmd == "reset":
-            current_node = method_tree
+            current_node = apps_tree
         elif cmd == "back":
             if len(last_node) == 0:
                 print("cannot go back")

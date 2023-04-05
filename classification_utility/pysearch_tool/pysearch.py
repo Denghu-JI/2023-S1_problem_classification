@@ -41,7 +41,7 @@ class pysearch:
                     r = open(self._method_path + '/' + method)
                     while is_next:
                         method_name = r.readline().strip('\n')
-                        print(method_name)
+                        # print(method_name)
                         if method_name[:8] == "# Method":
                             method_name = method_name[11:]
                             method_path = self._method_path + '/' + method
@@ -56,6 +56,7 @@ class pysearch:
             if root == self._app_path:
                 for dirr in dirs:
                     if dirr not in ignore:
+                        print(1)
                         app_path = self._app_path + '/' + dirr + '/' + dirr + '.py'
                         if os.path.exists(app_path):
                             app_name = r.readline().strip('\n')[2:]
