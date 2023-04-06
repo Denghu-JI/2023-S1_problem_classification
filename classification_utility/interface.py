@@ -1,5 +1,4 @@
 from relation_dict import hirc_tree, insert
-from tqdm import tqdm
 from pysearch_tool import pysearch
 
 
