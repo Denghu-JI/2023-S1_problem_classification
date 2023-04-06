@@ -7,20 +7,28 @@ from pysearch_tool import pysearch
 methods_path = "pysearch_tool/cofi/src/cofi/tools"
 applications_path = "pysearch_tool/espresso/contrib"
 problems_path = "pysearch_tool/cofi-examples/examples"
+ignore_list = ['__init__.py', '_base_inference_tool.py']
 
-app_info_name = 'README.md'
+ignore = ['slug_test', 'pumping_test', 'simple_regression', '']
+
+
+
+
 
 def main():
     p = pysearch.pysearch(methods_path,applications_path,problems_path)
-    p.search()
-    tre = hirc_tree('CoFI', [])
-    atre = hirc_tree('37 Earth Sciences', [])
+    p.search(ignore)
+    method_tree = hirc_tree('CoFI')
+    apps_tree = hirc_tree('37 Earth Sciences')
 
     for i in p.mds():
-        tre = insert(tre,i)
+        method_tree = insert(method_tree,i)
+
+    for i in p.aps():
+        apps_tree = insert(apps_tree,i)
 
     cmd = " "
-    current_node = tre
+    current_node = apps_tree
     last_node = []
 
     while cmd != 'exit':
@@ -44,7 +52,7 @@ def main():
             if not flag:
                 print("no such child!")
         elif cmd == "reset":
-            current_node = tre
+            current_node = apps_tree
         elif cmd == "back":
             if len(last_node) == 0:
                 print("cannot go back")
@@ -56,18 +64,10 @@ def main():
             print(current_node.description())
         elif cmd == "me":
             print(current_node.me())
+        elif cmd == "pt":
+            print(current_node.parent())
         else:
             print("not a vaild command")
-
-        
-    # print("Now you are on example testing")
-    # print("-----the first example------Method")
-    # print("tokens1 = ['cofi_simple_newton', 'simple Newton step', 'InLab', 'non-linear', 'optimization', 'parameter estimation', 'CoFI']")
-    # print("-----the second example------Application")
-    # print("tokens2 = ['pygimli_dcip_century_tri_mesh.ipynb', 'Newton conjugate gradient trust-region algorithm (trust-ncg)', 'scipy.optimize.minimize',  'non-linear', 'optimization', 'parameter estimation', 'CoFI']")
-    # print("Loading the tree!")
-    # #---------------------------------
-
 
 if __name__ == "__main__": 
     main()
