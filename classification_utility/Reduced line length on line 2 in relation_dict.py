@@ -15,7 +15,9 @@
 
 # An example labelling for CoFI examples: pygimli_dcip_century_tri_mesh.ipynb
 
-#     Application domain: pygimli_dcip_century_tri_mesh.ipynb <- DCIP <- 370602 Electrical and electromanetic methods in geophysics <- 3706 Geophysics <- 37 Earth Sciences
+#     Application domain: pygimli_dcip_century_tri_mesh.ipynb <- DCIP 
+#   <- 370602 Electrical and electromanetic methods in geophysics 
+#   <- 3706 Geophysics <- 37 Earth Sciences
 #     Methods domain: pygimli_dcip_century_tri_mesh.ipynb <- Newton conjugate gradient trust-region algorithm (trust-ncg) <- scipy.optimize.minimize <- non-linear <- optimization <- parameter estimation <- CoFI
 
 
