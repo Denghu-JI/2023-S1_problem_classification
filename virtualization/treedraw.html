@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>   
+    <head>
+        <title>tree interactive</title>
+        <style>
+            .center {
+              margin: 0;
+              position: absolute;
+              top: 10%;
+              left: 50%;
+        }
+        /*used same code for button as other parts*/
+            .button {
+              background-color: #4CAF50;
+              color: white;
+              padding: 12px 20px;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+              transition: background-color 0.2s;
+}
+            button:hover {
+              background-color: #3e8e41;
+}
+        </style>
+        <script>
+            var name = "button";
+            var section = "container";
+            function createDivLeft(idcurrent, count){
+                /*create a div on the left of parent*/
+                var y = document.createElement("div");
+                y.setAttribute("id", idcurrent);
+                y.style.position = "absolute";
+                y.style.bottom = "-100%";
+                y.style.left = "-100%";
+                var parent = Math.floor(count/2);
+                var parentid = section + parent.toString();
+                document.getElementById(parentid).appendChild(y);                
+            }
+            function createDivRight(idcurrent, count){
+                /*create a div on the right of parnet*/
+                var y = document.createElement("div");
+                y.setAttribute("id", idcurrent);
+                y.style.position = "absolute";
+                y.style.bottom = "-100%";
+                y.style.right = "-100%";
+                var parent = Math.floor(count/2) 
+                var parentnumber = section + parent.toString();
+                document.getElementById(parentnumber).appendChild(y);                
+            }
+            function createButton(idneeded, numb){
+                /*create a button and place it in the corresponding div*/
+                var x = document.createElement("button");
+                x.setAttribute("id", idneeded);
+                x.setAttribute('class', "button");
+                x.textContent = idneeded;
+                x.addEventListener('click', function() {
+                  show(idneeded)
+                  x.setAttribute('disabled', 'disabled');;}, false);
+                var containerNumber = section + numb.toString(); 
+                document.getElementById(containerNumber).appendChild(x);
+            }
+            function show(current){
+                /*get number to be assigned for the children*/
+                var num = current.toString().slice(6);
+                var number = parseInt(num)
+                var numbernext1 = number * 2;
+                var numbernext2 = numbernext1 + 1;
+                var idnext1 = name + numbernext1.toString();
+                var idnext2 = name + numbernext2.toString();
+                var iddivnext1 = section + numbernext1.toString();
+                var iddivnext2 = section + numbernext2.toString();
+                /*Draw two div separately on left and right*/
+                createDivLeft(iddivnext1, numbernext1);
+                createDivRight(iddivnext2, numbernext2);
+                /*Create new button */
+                createButton(idnext1, numbernext1);
+                createButton(idnext2, numbernext2);
+            }
+
+        </script>
+    </head>
+    <body>
+            <div id = "container1" class="center">
+                <button id = "button1" class = "button" type="button" onclick="show(id)">button1</button>
+            </div>  
+    </body>
+</html>
