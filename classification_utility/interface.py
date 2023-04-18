@@ -1,7 +1,5 @@
 from relation_dict import hirc_tree, insert
-##(may be used later) from tqdm import tqdm
 from pysearch_tool import pysearch
-
 
 #please specify those folder!
 methods_path = "pysearch_tool/cofi/src/cofi/tools"
