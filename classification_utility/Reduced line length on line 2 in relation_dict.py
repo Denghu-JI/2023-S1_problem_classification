@@ -7,7 +7,9 @@
 
 # An example labelling for Espresso problems
 
-#     magnetotelluric_1D <- magnetotelluric <- 370602 Electrical and electromanetic methods in geophysics <- 3706 Geophysics <- 37 Earth Sciences
+#     magnetotelluric_1D <- magnetotelluric <- 
+#  370602 Electrical and electromanetic methods in geophysics <- 
+#  3706 Geophysics <- 37 Earth Sciences
 
 
 
