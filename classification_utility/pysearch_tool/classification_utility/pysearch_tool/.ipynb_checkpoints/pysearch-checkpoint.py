@@ -1,4 +1,5 @@
-<<<<<<< HEAD
+#<<
+<<<<< HEAD
 #name
 #cofi -> balabal -> foo -> bar
 # sghdovhs;dugh
