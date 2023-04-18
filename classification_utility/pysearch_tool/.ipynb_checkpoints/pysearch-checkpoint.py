@@ -64,7 +64,7 @@ class pysearch:
                             app_des = r.readline().strip('\n')[15:]
                             self._apps.append(App(app_name,app_path,app_tree,app_des))
                             # self._apps.append({'name': app_name, 'path': 
-                            app_path, 'description': app_des})
+                            #app_path, 'description': app_des})
 
         # #applications in espresso
         # for root, dirs, files in os.walk(self._app_path):
