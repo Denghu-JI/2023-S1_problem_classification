@@ -1,6 +1,7 @@
 # An example labelling for CoFI methods
 
-#     cofi_simple_newton <- simple Newton step <- InLab <- non-linear <- optimization <- parameter estimation <- CoFI
+#     cofi_simple_newton <- simple Newton step <- InLab 
+# <- non-linear <- optimization <- parameter estimation <- CoFI
 
 
 
