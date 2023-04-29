@@ -28,7 +28,7 @@ def main():
         apps_tree = insert(apps_tree,i)
 
     cmd = " "
-    current_node = apps_tree
+    current_node = method_tree
     last_node = []
 
     while cmd != 'exit':
@@ -52,7 +52,7 @@ def main():
             if not flag:
                 print("no such child!")
         elif cmd == "reset":
-            current_node = apps_tree
+            current_node = method_treeg
         elif cmd == "back":
             if len(last_node) == 0:
                 print("cannot go back")
