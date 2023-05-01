@@ -25,8 +25,9 @@ def main():
     
     print(method_tree)
 
-    # for i in p.aps():
-    #     apps_tree = insert(apps_tree,i)
+    cmd = " "
+    current_node = method_tree
+    last_node = []
 
     # cmd = " "
     # current_node = apps_tree

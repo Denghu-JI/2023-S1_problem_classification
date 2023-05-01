@@ -4,27 +4,42 @@ const pos_nodes_node = new Map(); //record of whole node
 const pos_nodes_des = new Map(); //record of descript buttons
 const pos_nodes_finddoc = new Map(); //record of documentaiton buttons
 const pos_nodes_findgit = new Map(); //record of gitpath buttons
+const pos_func_buttons = new Map();
 
 const offset_node_mouse = new Map();
+const descriptions = new Map();
+
+var pos_sidebar
+var pending_centered
 var to_be_centered
+var current_des
+var other_task
+var tree
 //----------------------------------------------------------------
 
 function preload() {
-  tree = loadJSON('data.json');
+  tree = loadJSON('https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/data.json');
+
 }
 
 function basicSetup() {
-  canvas_width = 1000;
-  canvas_height = 500;
+  canvas_width = 850;
+  canvas_height = 400;
 }
 
 function setup() {
+  for (const [name, [x, y, depth, parentIndex]] of Object.entries(tree)) {
+    pos_nodes_node.set((name), [x,y,0,0])
+  }
   // Set up the canvas
   basicSetup();
   createCanvas(canvas_width, canvas_height);
   // color table--------------------------
   main_background_color = color('#e6f2ff');
-  main_sidebar_color = color('#99d6ff')
+  main_sidebar_color1 = color('#99d6ff')
+  main_sidebar_color2 = color('#ffffcc')
+  main_sidebar_color3 = color('#d9ffb3')
+
   main_waiting_color = color(0,0,0);
   node_color_1 = color('#ccffcc')
   node_color_2 = color('#ffffcc')
@@ -34,13 +49,24 @@ function setup() {
   //dim table--------------------------
   node_width = 120
   node_height = 45
+  pos_sidebar = [canvas_width ,canvas_height * 0.1]
   //function table--------------------
   dragging = 0
   center_step = 100
   centering = 0
+  sidebar_step = 30
+  sidebar_flag = 0
+  sidebar_open = 0
+  sidebar_close = 0
+  to_be_centered = 'scipy.linalg.lstsq'
   //-------testing setup----
-  pos_nodes_node.set('scipy.linalg.lstsq',[120,120,0,0])
-  pos_nodes_node.set('pytorch.optim',[500,120,0,0])
+  // pos_nodes_node.set('scipy.linalg.lstsq',[120,120,0,0])
+  // pos_nodes_node.set('pytorch.optim',[500,120,0,0])
+  // pos_nodes_node.set('test.node.test', [350,300,0,0])
+  descriptions.set('scipy.linalg.lstsq', 'this is a des for scipy.linalg.lstsq')
+  descriptions.set('pytorch.optim', 'this is a asdasdasd aksjdna askjdsq')
+  descriptions.set('test.node.test', 'test test 123 123')
+  current_des = 'scipy.linalg.lstsq'
 
 }
 
@@ -52,8 +78,16 @@ function draw() {
   rect(0,0,canvas_width,canvas_height)
   //-------waiting theme-------------
   draw_nodes()
-  bottombar(0.9, main_sidebar_color)
+  sidebar(0.3, 0.7, main_sidebar_color1, main_sidebar_color2, main_sidebar_color3)
+  bottombar(0.9, main_sidebar_color2)
   wait_theme(255,100)
+  fill(0)
+  text(sidebar_open, 50,50)
+  text(sidebar_flag,50,70)
+  text(sidebar_step,50,90)
+  text(pos_func_buttons.get('hide_sidebar'),50,110)
+
+
 }
 
 
@@ -64,13 +98,54 @@ function wait_theme(bg_color, transparent) {
     rect(0,0,canvas_width,canvas_height)
   }
 }
+//---------------sidebar implementation
+function sidebar(startdimh, startdimv, color1, color2, color3) {
+  let front_size = 22
+  fill(color1)
+  stroke(color1)
+  rect(pos_sidebar[0], pos_sidebar[1], canvas_width * startdimh, canvas_height * startdimv)
+  fill(color2)
+  stroke(color2)
+  rect(pos_sidebar[0], pos_sidebar[1] + canvas_height * startdimv * 0.2, canvas_width * startdimh, canvas_height * startdimv * 0.8)
+  fill(color3)
+  stroke(color3)
+  rect(pos_sidebar[0] + canvas_width * startdimh * 0.3, pos_sidebar[1] + canvas_height * startdimv * 0.85, canvas_width * startdimh * 0.3, canvas_height * startdimv * 0.1)
+  pos_func_buttons.set('hide_sidebar', [pos_sidebar[0] + canvas_width * startdimh * 0.3, pos_sidebar[1] + canvas_height * startdimv * 0.85, pos_sidebar[0] + canvas_width * startdimh * 0.3 + canvas_width * startdimh * 0.3, canvas_height * startdimv * 0.1 + pos_sidebar[1] + canvas_height * startdimv * 0.85])
+  fill(75)
+  textSize(front_size)
+  text('Hide', pos_sidebar[0] + canvas_width * startdimh * 0.3 + front_size * 0.6, pos_sidebar[1] + canvas_height * startdimv * 0.85 + front_size * 0.05, canvas_width * startdimh * 0.4, canvas_height * startdimv * 0.1)
 
-function sidebar(startdimh, color) {
-  fill(color)
-  stroke(color);
-  rect(canvas_width * startdimh, 0, canvas_width * (1 - startdimh),canvas_height)
+  if (current_des) {
+    let front_size = 22
+    let body_size = 20
+    fill(0)
+    textSize(front_size)
+    text(current_des,pos_sidebar[0] + front_size*0.6, pos_sidebar[1] + front_size * 1.2)
+    textSize(body_size)
+    text(descriptions.get(current_des),pos_sidebar[0] + body_size*0.6, pos_sidebar[1] + canvas_height * startdimv * 0.2 + body_size * 1.2, canvas_width * startdimh, canvas_height * startdimv * 0.8)
+  }
+  if (sidebar_flag === 1) {
+    sidebar_sliding(startdimh)
+    sidebar_step = sidebar_step - 1
+    if (sidebar_step === 0) {
+      sidebar_step = 30
+      sidebar_flag = 0
+    }
+  }
 }
-
+function sidebar_sliding(startdimh) {
+  if (sidebar_open === 1) {
+    if (pos_sidebar[0] > canvas_width * (1 - startdimh)) {
+      pos_sidebar[0] -= 10
+    }
+  }
+  if (sidebar_open === 0) {
+    if (pos_sidebar[0] < canvas_width) {
+      pos_sidebar[0] += 10
+    }
+  }
+}
+//----------------------------------------------------------------------------
 function bottombar(startdimv, color) {
   fill(color)
   stroke(color);
@@ -90,6 +165,9 @@ function draw_node(content, color1, color2) {
   let y = pos_nodes_node.get(content)[1]
   let textsize = 25;
   let req_width = textsize * content.length * 0.6;
+  if (req_width < 260) {
+    req_width = 260
+  }
   fill(color1);
   stroke(color1);
   draw_soft_rect_up(x,y,req_width,node_height,10)
@@ -159,12 +237,12 @@ function buttons(content, x,y, node_width, node_height, textsize) {
 
 //Table movement-------------------------
 function center_node(target_content) {
-  let target_x = canvas_width / 2 - 150
-  let target_y = canvas_height / 2  - 150
-  let node_pos = pos_nodes_node.get(target_content)
-  let x_placement = target_x - node_pos[0]
-  let y_placement = target_y - node_pos[1]
-  for (let [content, position] of pos_nodes_node) {
+    let target_x = canvas_width / 2 - 150
+    let target_y = canvas_height / 2  - 150
+    let node_pos = pos_nodes_node.get(target_content)
+    let x_placement = target_x - node_pos[0]
+    let y_placement = target_y - node_pos[1]
+    for (let [content, position] of pos_nodes_node) {
     pos_nodes_node.set(content, [position[0] + (x_placement/5), position[1] + (y_placement/5), 0, 0])
   }
 }
@@ -183,10 +261,31 @@ function centernode_animation() {
 //Event Handler---------------------------
 function mousePressed() {
   dragging = 0
+  for (let [content, position] of pos_func_buttons) {
+    if (mouseX > position[0] && mouseY > position[1] && mouseX < position[2] && mouseY < position[3]) {
+      if (content === 'hide_sidebar' && sidebar_open === 1) {
+        sidebar_open = 0
+        sidebar_flag = 1
+        other_task = 1
+      }
+    }
+  }
   for (let [content, position] of pos_nodes_node) {
     if (mouseX > position[0] && mouseY > position[1] && mouseX < position[2] && mouseY < position[3]) {
-      to_be_centered = content
-      center_step = 30
+      let description_pos = pos_nodes_des.get(content)
+      if (mouseX > description_pos[0] && mouseY > description_pos[1] && mouseX < description_pos[2] && mouseY < description_pos[3]) {
+        current_des = content
+        other_task = 1
+        if (pos_sidebar[0] == canvas_width) {
+          sidebar_flag = 1
+          sidebar_open = 1
+          return
+        }
+      } else{
+        other_task = 0
+        to_be_centered = content
+        center_step = 30
+      }
     }
   }
   for (let [content, position] of pos_nodes_node) {
@@ -197,7 +296,7 @@ function mousePressed() {
   }
 
 function mouseReleased() {
-  if (!dragging){
+  if (!dragging && other_task === 0){
     center_step = 30
     centering = 1
   }

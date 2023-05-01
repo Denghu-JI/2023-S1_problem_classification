@@ -55,7 +55,7 @@ class hirc_tree:
         self.x = 0
         self.y = 0
         self.modifier = 0
-        self.width = 120
+        self.width = 280
 
     def me(self):
         return self._me
@@ -149,7 +149,7 @@ def create_layers(node):
     add_to_layer(node)
     return layers
 
-def assign_coordinates(tree, separation_x=2, separation_y=120):
+def assign_coordinates(tree, separation_x=2, separation_y=200):
     layers = create_layers(tree)
     res = []
     for depth in layers.keys():
