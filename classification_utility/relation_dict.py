@@ -1,18 +1,23 @@
 # An example labelling for CoFI methods
 
-#     cofi_simple_newton <- simple Newton step <- InLab <- non-linear <- optimization <- parameter estimation <- CoFI
+#     cofi_simple_newton <- simple Newton step <- InLab 
+# <- non-linear <- optimization <- parameter estimation <- CoFI
 
 
 
 # An example labelling for Espresso problems
 
-#     magnetotelluric_1D <- magnetotelluric <- 370602 Electrical and electromanetic methods in geophysics <- 3706 Geophysics <- 37 Earth Sciences
+#     magnetotelluric_1D <- magnetotelluric <- 
+#  370602 Electrical and electromanetic methods in geophysics <- 
+#  3706 Geophysics <- 37 Earth Sciences
 
 
 
 # An example labelling for CoFI examples: pygimli_dcip_century_tri_mesh.ipynb
 
-#     Application domain: pygimli_dcip_century_tri_mesh.ipynb <- DCIP <- 370602 Electrical and electromanetic methods in geophysics <- 3706 Geophysics <- 37 Earth Sciences
+#     Application domain: pygimli_dcip_century_tri_mesh.ipynb <- DCIP 
+#   <- 370602 Electrical and electromanetic methods in geophysics 
+#   <- 3706 Geophysics <- 37 Earth Sciences
 #     Methods domain: pygimli_dcip_century_tri_mesh.ipynb <- Newton conjugate gradient trust-region algorithm (trust-ncg) <- scipy.optimize.minimize <- non-linear <- optimization <- parameter estimation <- CoFI
 
 
