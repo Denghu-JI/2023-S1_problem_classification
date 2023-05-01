@@ -9,6 +9,10 @@ const offset_node_mouse = new Map();
 var to_be_centered
 //----------------------------------------------------------------
 
+function preload() {
+  tree = loadJSON('data.json');
+}
+
 function basicSetup() {
   canvas_width = 1000;
   canvas_height = 500;

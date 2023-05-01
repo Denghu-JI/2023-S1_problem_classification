@@ -51,6 +51,12 @@ class hirc_tree:
         self._path = None
         self._description = None
 
+        #---graphics property
+        self.x = 0
+        self.y = 0
+        self.modifier = 0
+        self.width = 120
+
     def me(self):
         return self._me
     
@@ -78,6 +84,9 @@ class hirc_tree:
     def path(self):
         return self._path
 
+    def to_pos(self):
+        return [self.x, self.y,0,0]
+
 def insert(tre, method):
         lst = method.tree()
         if len(lst)!= 1:
@@ -100,8 +109,81 @@ def insert(tre, method):
             
         return tre
 
+def assign_depth(node, current_depth):
+    node.depth = current_depth
+    for child in node.children():
+        assign_depth(child, current_depth + 1)
+
+position_dict = {}
+#-----------------------------------
+def build_pos(node):
+    spreation = 20
+    if node.depth in position_dict.keys():
+        position_dict[node.depth].append(node)
+    else: 
+        position_dict[node.depth] = [node]
+    if node.children():
+        for i in node.children():
+            build_pos(i)
+
+    for i in position_dict.keys():
+        for j in position_dict[i]:
+            j.x = 5201314
+    return position_dict
 
 
+#-------------------------------------
+def create_layers(node):
+    layers = {}
+    assign_depth(node, 0)
+
+    def add_to_layer(node):
+        depth = node.depth
+        if depth not in layers:
+            layers[depth] = []
+        layers[depth].append(node)
+
+        for child in node.children():
+            add_to_layer(child)
+
+    add_to_layer(node)
+    return layers
+
+def assign_coordinates(tree, separation_x=2, separation_y=120):
+    layers = create_layers(tree)
+    res = []
+    for depth in layers.keys():
+        res.append(sum([i.width for i in layers[depth]]))
+    max_layer_width = max(res)
+
+    y = 0
+    for depth, layer in layers.items():
+        x = 0
+        layer_width = sum([i.width for i in layers[depth]])
+        extra_space = (max_layer_width - layer_width) * separation_x / 2
+
+        for node in layer:
+            node.x = x * (separation_x + node.width) + extra_space
+            node.y = y * separation_y
+            x += 1
+
+        y += 1
+
+def dict_package(node):
+    res = {}
+    load_to_dict(node,res)
+    offsetX = 150 - res[node.me()][0]
+    offsetY = 120 - res[node.me()][1]
+    for i in res.values():
+        i[0] += offsetX
+        i[1] += offsetY
+    
+    return res
+
+def load_to_dict(node, res):
+    res[node.me()] = node.to_pos()
+    for i in node.children():
+        load_to_dict(i, res)
 #----------------------test
 
 # tokens1 = ['cofi_simple_newton', 'simple Newton step', 'InLab', 'non-linear', 'optimization', 'parameter estimation', 'CoFI']
