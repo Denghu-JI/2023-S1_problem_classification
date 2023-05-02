@@ -1,0 +1,39 @@
+[
+    {
+        "id": "1",
+        "name": "topNode",
+        "description": "topNodeDescription",
+        "childName": "topChildName",
+        "children": [
+            {
+                "id": "11",
+                "name": "subNodeOneName",
+                "description": "subNodeOneDescription",
+                "childName": "subNodeOneChildName",
+                "children": [
+                    {
+                        "id": "111",
+                        "name": "test",
+                        "description": "test",
+                        "childName": "test",
+                        "children": []
+                    },
+                    {
+                        "id": "112",
+                        "name": "subNodeOneName",
+                        "description": "subNodeOneDescription",
+                        "childName": "subNodeOneChildName",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "12",
+                "name": "subNodeTwoName",
+                "description": "subNodeTwoDescription",
+                "childName": "subNodeTwoChildName",
+                "children": []
+            }
+        ]
+    }
+]

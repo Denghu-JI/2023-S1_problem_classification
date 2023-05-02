@@ -62,8 +62,17 @@ class pysearch:
                             app_name = r.readline().strip('\n')[2:]
                             app_tree = r.readline().strip('\n')[2:].split(" -> ")
                             app_des = r.readline().strip('\n')[15:]
-                            self._apps.append(App(app_name, app_path, app_tree, app_des))
+                            self._apps.append(App(app_name,app_path,app_tree,app_des))
+                            # self._apps.append({'name': app_name, 'path': 
+                            #app_path, 'description': app_des})
 
+        # #applications in espresso
+        # for root, dirs, files in os.walk(self._app_path):
+        #     if root == self._app_path:
+        #         for dir in dirs:
+        #             #current plan: read the hierarchial info in a file
+        #             r = open(self._app_path + '/' + dir + '/' + app_info_name)
+        #             print(r.read())
         
         
 class Method:
