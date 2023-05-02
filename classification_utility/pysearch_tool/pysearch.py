@@ -12,7 +12,7 @@ methods_path = "cofi/src/cofi/tools"
 applications_path = "espresso/contrib"
 problems_path = "cofi-examples/examples"
 
-ignore = ['slug_test', 'pumping_test', 'simple_regression', '']
+ignore = ['slug_test', 'pumping_test', 'simple_regression']
 
 
 
@@ -66,16 +66,8 @@ class pysearch:
                             app_name = r.readline().strip('\n')[2:]
                             app_tree = r.readline().strip('\n')[2:].split(" -> ")
                             app_des = r.readline().strip('\n')[15:]
-                            self._apps.append(App(app_name,app_path,app_tree,app_des))
-                            # self._apps.append({'name': app_name, 'path': app_path, 'description': app_des})
+                            self._apps.append(App(app_name, app_path, app_tree, app_des))
 
-        # #applications in espresso
-        # for root, dirs, files in os.walk(self._app_path):
-        #     if root == self._app_path:
-        #         for dir in dirs:
-        #             #current plan: read the hierarchial info in a file
-        #             r = open(self._app_path + '/' + dir + '/' + app_info_name)
-        #             print(r.read())
         
         
 class Method:
@@ -139,17 +131,6 @@ class App:
     
     def des(self):
         return self._des
-            
-#path to methods. applications and problems
-methods_prefix = methods_path
-#ToDO: create other two prefix
-
-# for _, _, files in os.walk(methods_path):
-#     for method in files[:-2]:
-#         r = open(methods_path + '/' + method)
-#         print(method)
-#         print(r.readline().strip('\n'))
-#         print("this is it!")
 
 p = pysearch(methods_path,applications_path,problems_path)
 p.search()
