@@ -13,13 +13,13 @@ var pos_sidebar
 var pending_centered
 var to_be_centered
 var current_des
-var other_task
 var tree
 var current_tree
 //----------------------------------------------------------------
 
 function preload() {
-  tree = loadJSON('https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/data.json');
+  tree_method = loadJSON('https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/data-methods.json');
+  tree_app = loadJSON('https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/data-apps.json')
 
 }
 
@@ -29,9 +29,9 @@ function basicSetup() {
 }
 
 function setup() {
-  for (const [name, [x, y, depth, parentIndex]] of Object.entries(tree)) {
-    pos_nodes_node.set((name), [x,y,0,0])
-  }
+  // for (const [name, [x, y, depth, parentIndex]] of Object.entries(tree_method)) {
+  //   pos_nodes_node.set((name), [x,y,0,0])
+  // }
   // Set up the canvas
   basicSetup();
   let myCanva = createCanvas(canvas_width, canvas_height);
@@ -74,7 +74,6 @@ function setup() {
     canvas_width = windowWidth
   } else {canvas_width = 945}
   pos_sidebar = [canvas_width ,canvas_height * 0.1]
-  tree = loadJSON('https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/data.json')
   current_tree = 'CoFI'
 
 }
@@ -292,6 +291,7 @@ function buttons(content, x,y, node_width, node_height, textsize) {
 
 //Table movement-------------------------
 function center_node(target_content) {
+  if(pos_nodes_node.get(target_content)) {
     let target_x = canvas_width / 2 - 150
     let target_y = canvas_height / 2  - 150
     let node_pos = pos_nodes_node.get(target_content)
@@ -299,6 +299,7 @@ function center_node(target_content) {
     let y_placement = target_y - node_pos[1]
     for (let [content, position] of pos_nodes_node) {
     pos_nodes_node.set(content, [position[0] + (x_placement/3), position[1] + (y_placement/3), 0, 0])
+  }
   }
 }
 
@@ -329,6 +330,26 @@ function mousePressed() {
         center_step = 30
         return
       } 
+      if (content === 'CoFI') {
+        pos_nodes_node.clear()
+        for (const [name, [x, y, depth, parentIndex]] of Object.entries(tree_method)) {
+          pos_nodes_node.set((name), [x,y,0,0])
+        }
+        current_tree = 'CoFI'
+        to_be_centered = current_tree
+        center_step = 30
+        return
+      }
+      if (content === 'Espresso') {
+        pos_nodes_node.clear()
+        for (const [name, [x, y, depth, parentIndex]] of Object.entries(tree_app)) {
+          pos_nodes_node.set((name), [x,y,0,0])
+        }
+        current_tree = '37 Earth Sciences'
+        to_be_centered = current_tree
+        center_step = 30
+        return
+      }
     }
   }
   for (let [content, position] of pos_nodes_node) {
@@ -342,7 +363,6 @@ function mousePressed() {
           return
         }
       } else{
-        other_task = 0
         to_be_centered = content
         center_step = 30
       }

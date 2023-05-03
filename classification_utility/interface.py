@@ -9,7 +9,7 @@ applications_path = "pysearch_tool/espresso/contrib"
 problems_path = "pysearch_tool/cofi-examples/examples"
 ignore_list = ['__init__.py', '_base_inference_tool.py']
 
-ignore = ['slug_test', 'pumping_test', 'simple_regression', '']
+ignore = []
 
 
 
@@ -24,15 +24,17 @@ def main():
     for i in p.mds():
         method_tree = insert(method_tree,i)
     
-    print(method_tree)
+    for i in p.aps():
+        print(i)
+        apps_tree = insert(apps_tree,i)
 
     cmd = " "
-    current_node = method_tree
+    current_node = apps_tree
     last_node = []
 
-    # cmd = " "
-    # current_node = apps_tree
-    # last_node = []
+    cmd = " "
+    current_node = apps_tree
+    last_node = []
 
     # while cmd != 'exit':
     #     cmd = input('Whats next?: ')
@@ -82,17 +84,29 @@ if __name__ == "__main__":
     for i in p.mds():
         method_tree = insert(method_tree,i)
     
-    print(method_tree)
+    for i in p.aps():
+        apps_tree = insert(apps_tree,i)
+    
+    assign_coordinates(apps_tree)
     assign_coordinates(method_tree)
-    d = dict_package(method_tree)
+    method_dt = dict_package(method_tree)
+    app_dt = dict_package(apps_tree)
 
 
 
-    with open('data.json', 'w') as fp:
-        json.dump(d, fp)
+    method_dt_key = 'data-methods.json'
+    app_dt_key = 'data-apps.json'
+    with open(method_dt_key, 'w') as fp:
+        json.dump(method_dt, fp)
+
+    with open(app_dt_key, 'w') as fp:
+        json.dump(app_dt, fp)
 
     s3 = boto3.client('s3')
     bucket_name = 'jsonofthetree'
     json_key = 'data.json'
-    json_d = json.dumps(d)
-    s3.put_object(Bucket=bucket_name, Key=json_key, Body=json_d, ACL='public-read')
+    json_methods_dt = json.dumps(method_dt)
+    json_apps_dt = json.dumps(app_dt)
+
+    s3.put_object(Bucket=bucket_name, Key=method_dt_key, Body=json_methods_dt, ACL='public-read')
+    s3.put_object(Bucket=bucket_name, Key=app_dt_key, Body=json_apps_dt, ACL='public-read')
