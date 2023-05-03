@@ -99,6 +99,7 @@ function draw() {
   // text(sidebar_flag,50,70)
   // text(sidebar_step,50,90)
   // text(pos_func_buttons.get('hide_sidebar'),50,110)
+  text(to_be_centered,50,50)
 
 
 }
@@ -302,11 +303,12 @@ function center_node(target_content) {
 }
 
 function centernode_animation() {
-  if (centering === 1) {
+  if (centering === 1 && to_be_centered != '') {
     center_step = center_step - 1
     center_node(to_be_centered)
     if (center_step === 0) {
       centering = 0
+      to_be_centered = ''
     }
   }
 }
