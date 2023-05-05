@@ -1,5 +1,5 @@
 # import git
-import subprocess
+#import subprocess
 #(might delete if never used) import pathlib
 import os
 
@@ -50,28 +50,23 @@ class pysearch:
                             self._methods.append(Method(method_name, method_path, method_tree,des))
                         else:
                             is_next = False
+
                 
 
         for root, dirs, files in os.walk(self._app_path):
             if root == self._app_path:
                 for dirr in dirs:
                     if dirr not in ignore:
-                        print(1)
                         app_path = self._app_path + '/' + dirr + '/' + dirr + '.py'
+                        r = open(app_path)
                         if os.path.exists(app_path):
                             app_name = r.readline().strip('\n')[2:]
                             app_tree = r.readline().strip('\n')[2:].split(" -> ")
                             app_des = r.readline().strip('\n')[15:]
-                            self._apps.append(App(app_name,app_path,app_tree,app_des))
-                            # self._apps.append({'name': app_name, 'path': app_path, 'description': app_des})
+                            self._apps.append(App(app_name, app_path, app_tree, app_des))
+                            print(app_tree)
+            # print(self._apps)
 
-        # #applications in espresso
-        # for root, dirs, files in os.walk(self._app_path):
-        #     if root == self._app_path:
-        #         for dir in dirs:
-        #             #current plan: read the hierarchial info in a file
-        #             r = open(self._app_path + '/' + dir + '/' + app_info_name)
-        #             print(r.read())
         
         
 class Method:

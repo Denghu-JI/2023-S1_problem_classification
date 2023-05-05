@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>treeComponent</title>
+</head>
+<!-- Add un-tree js -->
+<script src="./un-tree.min.js"></script>
+<script src="./jquery.js"></script>
+<script src="./html2canvas.min.js"></script>
+
+<body>
+    <!-- Load button, for testing -->
+    <input type="button" title="Load Tree" value="Load Tree" onclick="loading()" />
+    <!-- The id value of the currently selected node Node -->
+    <input type="hidden" id="choosenNodeValue" />
+    <!-- Current selected node display area -->
+    <div>
+        <h2>Currently selected node：<span id="choosenNode"></span></h2>
+    </div>
+    <!-- Tree structure content -->
+    <div id="un-tree--wrapper"></div>
+    <!-- Right side display -->
+    <div id="guide-map"></div>
+
+</body>
+<style>
+    #un-tree--wrapper {
+        width: 800px;
+        height: auto;
+        padding: 10px;
+        outline: 1px solid grey;
+    }
+
+    .un-org-tree--wrapper .un-org-tree.vertical .un-org-tree-item>span {
+        display: inline-block;
+        margin-bottom: 40px;
+        background-color: green;
+        position: relative;
+        border: 1px solid #888;
+        border-radius: 10px;
+    }
+
+    #guide-map {
+        width: 300px;
+        height: 250px;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        outline: 1px solid grey;
+    }
+
+    #guide-map-img {
+        width: 250px;
+    }
+</style>
+<script type="text/javascript">
+
+
+
+    // Default data for the test
+    let data = [
+        {
+            "id": "1",
+            "text": "topNode",
+            "parent": "root",
+            "children": []
+        },
+        {
+            "id": "2",
+            "text": "node1",
+            "parent": "1",
+            "children": []
+        },
+        {
+            "id": "3",
+            "text": "node2",
+            "parent": "1",
+            "children": []
+        },
+        {
+            "id": "4",
+            "text": "node3",
+            "parent": "2",
+            "children": []
+        },
+        {
+            "id": "5",
+            "text": "node4",
+            "parent": "2",
+            "children": []
+        },
+        {
+            "id": "6",
+            "text": "node5",
+            "parent": "3",
+            "children": []
+        },
+        {
+            "id": "7",
+            "text": "node6",
+            "parent": "5",
+            "children": []
+        },
+        {
+            "id": "8",
+            "text": "node7",
+            "parent": "5",
+            "children": []
+        },
+        {
+            "id": "9",
+            "text": "node8",
+            "parent": "5",
+            "children": []
+        },
+        {
+            "id": "10",
+            "text": "node9",
+            "parent": "6",
+            "children": []
+        },
+        {
+            "id": "11",
+            "text": "node10",
+            "parent": "7",
+            "children": []
+        },
+        {
+            "id": "12",
+            "text": "node11",
+            "parent": "7",
+            "children": []
+        },
+        {
+            "id": "13",
+            "text": "node12",
+            "parent": "8",
+            "children": []
+        },
+        {
+            "id": "14",
+            "text": "node12",
+            "parent": "8",
+            "children": []
+        },
+        {
+            "id": "15",
+            "text": "node12",
+            "parent": "8",
+            "children": []
+        }
+    ];
+
+    //Default data, take the data whose parent is root
+    let defaultData;
+
+    //Get to the DOM element of the tree
+    let treeEle = document.getElementById("un-tree--wrapper");
+    //The diagram of navigation shows
+    var guideMap = document.getElementById('guide-map');
+
+
+    function loadingGuideMap() {
+        //Clear the right-hand navigation first
+        var img = document.getElementById('guide-map-img');
+        if (img) {
+            img.remove();
+        }
+        // Get the DOM element to be converted into an image
+        var domEle = document.getElementById("guide-map");
+        //Get the latest tree data
+        var targetDom = document.getElementById("un-tree--wrapper");
+        // Converting DOM to canvas using html2canvas
+        html2canvas(targetDom).then(function (canvas) {
+            //Get the base64 of the image
+            var dataURL = canvas.toDataURL('image/png');
+            var imgDom = '<img id="guide-map-img" src="' + dataURL + '" />';
+            guideMap.innerHTML = imgDom;
+        });
+    }
+
+
+    // Loading tree method
+    function loading() {
+        defaultData = [];
+        // Get the default tree top node data
+        let topNode = getSubNodeList('root', null);
+        //Note here that a tree has only one top node, and if more than one is obtained, it is considered wrong data and is not allowed to build the tree
+        if (topNode.length > 1) {
+            alert("Build tree error with multiple tree top nodes！")
+            return;
+        }
+        defaultData = topNode;
+        //Build a tree
+        rebuildTree(defaultData);
+        //Load the map in the lower right corner
+        loadingGuideMap();
+    }
+
+    // Tree node click method
+    function handleClick(itemId, itemData, itemNode) {
+        //Simulate calling the interface to get node child data
+        let subNodeList = getSubNodeList(itemId, itemData);
+        //Call to rebuild the tree
+        rebuildTree(subNodeList);
+        //Set the current selected node content display
+        var chooseNode = document.getElementById('choosenNode');
+        chooseNode.innerHTML = itemData['text']
+        var choosenNodeValue = document.getElementById('choosenNodeValue');
+        choosenNodeValue.setAttribute('value', itemData['id']);
+        //Set the currently selected node's area red box checked
+        var e = document.getElementById('node-' + itemId);
+        e.style.backgroundColor = 'pink';
+        e.style.opacity = '85%';
+        e.style.border = '1px solid red';
+        e.style.padding = '10px';
+        //Refresh the right navigation map
+        loadingGuideMap();
+    }
+
+    // Simulate calling the interface to get the child node data of the node
+    function getSubNodeList(parentId, nodeData) {
+        // Define a child node data
+        let subNode = defaultData;
+        let subNodeCount = 0;
+        for (let i = 0; i < data.length; i++) {
+            const d = data[i];
+            //Get all the subordinate node data of the selected node and add it to the subset of the selected node, if the node already exists then do not add it
+            if (d['parent'] == parentId && subNode.indexOf(d) < 0) {
+                subNode.push(d);
+                subNodeCount++;
+            }
+        }
+        // Determine if the node has children, and if not, prompt for them
+        var choosenNodeValue = document.getElementById('choosenNodeValue').value;
+        if (subNodeCount == 0 && choosenNodeValue != parentId) {
+            alert("Node：“" + nodeData['text'] + "”No child node data！")
+        }
+        return subNode;
+    }
+
+    // Rebuild the tree method
+    function rebuildTree(treeData) {
+        new UNTree({
+            el: treeEle,
+            jsonArr: treeData, // Data for building the tree
+            parentld: "root", // The default parent of the root node is root
+            type: "list",// Use array format data by default
+            viewClass: "view-demo", // The css style class of the tree node, fixed
+            itemClass: "item-demo", // The css style class of the tree node, fixed
+            click: handleClick, // Methods called by node click
+        });
+    }
+
+</script>
+
+</html>
