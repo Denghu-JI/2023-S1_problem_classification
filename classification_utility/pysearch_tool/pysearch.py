@@ -32,24 +32,33 @@ class pysearch:
     def aps(self):
         return self._apps
 
-    def search(self,ignore):
-        #inference methods in cofi
-        for _, _, files in os.walk(self._method_path):
-            for method in files:
-                is_next = True
-                if method not in ignore:
-                    r = open(self._method_path + '/' + method)
-                    while is_next:
-                        method_name = r.readline().strip('\n')
-                        # print(method_name)
-                        if method_name[:8] == "# Method":
-                            method_name = method_name[11:]
-                            method_path = self._method_path + '/' + method
-                            method_tree = r.readline().strip('\n')[2:].split(" -> ")
-                            des = r.readline().strip('\n')[2:]
-                            self._methods.append(Method(method_name, method_path, method_tree,des))
-                        else:
-                            is_next = False
+    def search(filename, keyword):
+        with open(filename) as file:
+            lines = file.readlines()
+
+        results = []
+        method = ""
+        cofi = ""
+        desc = ""
+
+        for line in lines:
+            if "Method :" in line:
+                method = line.strip()
+            elif "CoFI ->" in line:
+                parts = line.strip().split(" -> ")
+                cofi = {
+                    "category": parts[1],
+                    "subcategory": parts[2],
+                    "library": parts[3],
+                    "function": parts[4]
+                }
+            elif "description:" in line:
+                desc = line.strip()
+
+                if keyword.lower() in f"{method.lower()} {cofi.lower()} {desc.lower()}":
+                    results.append((method, cofi, desc))
+
+    
 
                 
 
@@ -65,6 +74,7 @@ class pysearch:
                             app_des = r.readline().strip('\n')[15:]
                             self._apps.append(App(app_name, app_path, app_tree, app_des))
                             print(app_tree)
+            # print(self._apps)
             # print(self._apps)
 
         
