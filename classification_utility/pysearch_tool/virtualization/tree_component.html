@@ -3,9 +3,42 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>treeComponent</title>
-    <script type="text/javascript">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> 
+    <script>
         // array to store data from backend
         let testdata = [];
+        let url = 'https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/method_relation.json';
+            //get data as json
+            $.getJSON(url, function(readdata){
+                alert("ok");
+                //read data into dataset
+                for (let i = 0; i < readdata.length; i++){ 
+                    ele = {};
+                    ele.id = readdata[i].id;
+                    ele.text = readdata[i].text;
+                    ele.parent = readdata[i].parent;
+                    ele.children = [];
+                    testdata[i] = ele;}
+                }
+            )
+        // read data from server into the dataset
+        /*function preload(){
+            let url = 'https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/method_relation.json';
+            //get data as json
+            $.getJSON(url, function(readdata){
+                alert("ok");
+                //read data into dataset
+                for (let i = 0; i < readdata.length; i++){ 
+                    ele = {};
+                    ele.id = readdata[i].id;
+                    ele.text = readdata[i].text;
+                    ele.parent = readdata[i].parent;
+                    ele.children = [];
+                    testdata[i] = ele;}
+                }
+            )
+        ;} */
+        
     </script>
 </head>
 <!-- Add un-tree js -->
@@ -59,26 +92,9 @@
         width: 250px;
     }
 </style>
+
 <script type="text/javascript">
-    // read data from server into the dataset
-    function preload(){
-        let url = 'https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/method_relation.json';
-        //get data as json
-        $.getJSON(url, function(readdata){
-            alert("ok");
-            //read data into dataset
-            for (let i = 0; i < readdata.length; i++){ 
-                ele = {};
-                ele.id = readdata[i].id;
-                ele.text = readdata[i].text;
-                ele.parent = readdata[i].parent;
-                ele.children = [];
-                testdata[i] = ele;}
-            }
-        )
-    ;}
-    //load dataset
-    window.onload = preload;
+    
     alert("hello");
 
     // Default data for the test
