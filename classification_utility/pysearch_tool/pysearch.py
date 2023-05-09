@@ -57,7 +57,7 @@ class pysearch:
                         if line.startswith("# Method : "):
                             method_name = line[11:]
                         elif line.startswith("# CoFI"):
-                            method_tree = line[8:].strip().split(" -> ")
+                            method_tree = line[10:].strip().split(" -> ")
                         elif line.startswith("# description:"):
                             description = line[14:]
                     print(method_name)
