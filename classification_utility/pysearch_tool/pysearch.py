@@ -59,7 +59,7 @@ class pysearch:
                         elif line.startswith("# CoFI"):
                             method_tree = line[10:].strip().split(" -> ")
                         elif line.startswith("# description:"):
-                            description = line[14:]
+                            description = line[15:]
                     print(method_name)
                     print(method_tree)
                     print(description)
