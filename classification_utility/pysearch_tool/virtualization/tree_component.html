@@ -7,7 +7,7 @@
         function getBackend() {
             // Send a request to the backend API to fetch the methods list based on the description
             var description = sessionStorage.getItem('searchkey'); 
-            tree_app = loadJSON('https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/data-apps.json')  
+            /*tree_app = loadJSON('https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/data-apps.json')  
             fetch(`/api/methods?description=${encodeURIComponent(description)}`)
             .then(response => response.json()) //Convert the response to JSON
             .then(methods =>{
@@ -24,7 +24,7 @@
             //Append the newly created list item to the methods list
             methodList.appendChild(item);});}) 
             //Catch the potential error
-            .catch(error => console.error(error))
+            .catch(error => console.error(error)) */
         if (description == ""){
             alert("no keyword provided")
         }
