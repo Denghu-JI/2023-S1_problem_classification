@@ -33,9 +33,8 @@ class pysearch:
         return self._apps
 
     def search(self, ignore):
-        methods = []  # Store the found methods
-        apps = []  # Store the found apps
-        print(methods)
+        # methods = []  # Store the found methods
+        # apps = []  # Store the found apps
 
         # Inference methods in CoFI
         for root, _, files in os.walk(self._method_path):
@@ -46,7 +45,6 @@ class pysearch:
                     method_path = os.path.join(root, method)
                     with open(method_path) as file:
                         lines = file.readlines()
-                        print(lines)
 
                     method_name = ""
                     method_tree = []
@@ -57,21 +55,20 @@ class pysearch:
                         if line.startswith("# Method : "):
                             method_name = line[11:]
                         elif line.startswith("# CoFI"):
-                            method_tree = line[8:].strip().split(" -> ")
+                            method_tree = line[10:].strip().split(" -> ")
                         elif line.startswith("# description:"):
-                            description = line[14:]
+                            description = line[15:]
                     print(method_name)
                     print(method_tree)
                     print(description)
-                    methods.append(Method(method_name, method_path, method_tree, description))
-        print(type(methods))
-        print(methods)
+                    self._methods.append(Method(method_name, method_path, method_tree, description))
         # Inference applications in CoFI
         for root, dirs, files in os.walk(self._app_path):
             if root == self._app_path:
-                for dir_name in dirs:
-                    if dir_name not in ignore:
-                        app_path = os.path.join(self._app_path, dir_name, dir_name + ".py")
+                for dirr in dirs:
+                    if dirr not in ignore:
+                        app_path = self._app_path + '/' + dirr + '/' + dirr + '.py'
+                        r = open(app_path)
                         if os.path.exists(app_path):
                             app_name = r.readline().strip('\n')[2:]
                             app_tree = r.readline().strip('\n')[2:].split(" -> ")
