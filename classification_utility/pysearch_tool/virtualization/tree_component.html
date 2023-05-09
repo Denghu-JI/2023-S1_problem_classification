@@ -3,6 +3,37 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>treeComponent</title>
+    <script type="text/javascript">
+        function getBackend() {
+            // Send a request to the backend API to fetch the methods list based on the description
+            var description = sessionStorage.getItem('searchkey'); 
+            tree_app = loadJSON('https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/data-apps.json')  
+            fetch(`/api/methods?description=${encodeURIComponent(description)}`)
+            .then(response => response.json()) //Convert the response to JSON
+            .then(methods =>{
+            //Get the unordered list element for the methods
+            const methodsList = document.getElementById("methods");
+            //Clear the list content
+            methodsList.innerHTML = "";
+            //Iterate through the fetched methods list
+            methods.forEach(method => {
+            //Create a new list item element
+            const item = document.createElement("li");
+            //Set the list item content to the method name
+            item.textContent = method.name;
+            //Append the newly created list item to the methods list
+            methodList.appendChild(item);});}) 
+            //Catch the potential error
+            .catch(error => console.error(error))
+        if (description == ""){
+            alert("no keyword provided")
+        }
+        else{
+            alert(description)
+        }   
+        }
+        window.onload = getBackend;
+        </script>
 </head>
 <!-- Add un-tree js -->
 <script src="./un-tree.min.js"></script>
