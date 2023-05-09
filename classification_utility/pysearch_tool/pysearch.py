@@ -66,31 +66,21 @@ class pysearch:
                     methods.append(Method(method_name, method_path, method_tree, description))
         print(type(methods))
         print(methods)
+        
         # Inference applications in CoFI
         for root, dirs, files in os.walk(self._app_path):
             if root == self._app_path:
-                for dir_name in dirs:
-                    if dir_name not in ignore:
-                        app_path = os.path.join(self._app_path, dir_name, dir_name + ".py")
+                for dirr in dirs:
+                    if dirr not in ignore:
+                        app_path = self._app_path + '/' + dirr + '/' + dirr + '.py'
+                        r = open(app_path)
                         if os.path.exists(app_path):
-                            with open(app_path) as file:
-                                lines = file.readlines()
-                                print(lines)
-                            app_name = ""
-                            app_tree = []
-                            app_des = ""
-                                
-                            for line in lines:
-                                line = line.strip()
-                                if line.startswith("# App"):
-                                    app_name = line[6:]
-                                elif line.startswith("# CoFI"):
-                                    app_tree = line[8:].strip().split(" -> ")
-                                elif line.startswith("# description:"):
-                                    app_des = line[14:]
-                            apps.append(App(app_name, app_path, app_tree, app_des))
+                            app_name = r.readline().strip('\n')[2:]
+                            app_tree = r.readline().strip('\n')[2:].split(" -> ")
+                            app_des = r.readline().strip('\n')[15:]
+                            self._apps.append(App(app_name, app_path, app_tree, app_des))
+                            print(app_tree)
 
-        return methods, apps
             # print(self._apps)
             # print(self._apps)
 
