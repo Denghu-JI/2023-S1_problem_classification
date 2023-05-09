@@ -138,5 +138,8 @@ if __name__ == "__main__":
     with open(app_rel_key, 'w') as fp:
         json.dump(relation_app, fp)
 
-    s3.put_object(Bucket=bucket_name, Key=method_rel_key, Body=json_methods_dt, ACL='public-read')
-    s3.put_object(Bucket=bucket_name, Key=app_rel_key, Body=json_apps_dt, ACL='public-read')
+    json_relation_method = json.dumps(relation_method)
+    json_relation_app = json.dumps(relation_app)
+
+    s3.put_object(Bucket=bucket_name, Key=method_rel_key, Body=json_relation_method, ACL='public-read')
+    s3.put_object(Bucket=bucket_name, Key=app_rel_key, Body=json_relation_app, ACL='public-read')

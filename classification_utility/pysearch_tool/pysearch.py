@@ -32,42 +32,46 @@ class pysearch:
     def aps(self):
         return self._apps
 
-    def search(self, filename, keyword):
-        with open(filename) as file:
-            lines = file.readlines()
+    def search(self, ignore):
+        methods = []  # Store the found methods
+        apps = []  # Store the found apps
+        print(methods)
 
-        results = []
-        method = ""
-        cofi = ""
-        desc = ""
+        # Inference methods in CoFI
+        for root, _, files in os.walk(self._method_path):
+            for method in files:
+                if method.endswith("-checkpoint.py"):
+                    continue  # Skip temporary checkpoint files
+                if method not in ignore:
+                    method_path = os.path.join(root, method)
+                    with open(method_path) as file:
+                        lines = file.readlines()
+                        print(lines)
 
-        for line in lines:
-            if "Method :" in line:
-                method = line.strip()
-            elif "CoFI ->" in line:
-                parts = line.strip().split(" -> ")
-                cofi = {
-                    "category": parts[1],
-                    "subcategory": parts[2],
-                    "library": parts[3],
-                    "function": parts[4]
-                }
-            elif "description:" in line:
-                desc = line.strip()
+                    method_name = ""
+                    method_tree = []
+                    description = ""
 
-                if keyword.lower() in f"{method.lower()} {cofi.lower()} {desc.lower()}":
-                    results.append((method, cofi, desc))
-
-    
-
-                
-
+                    for line in lines:
+                        line = line.strip()
+                        if line.startswith("# Method : "):
+                            method_name = line[11:]
+                        elif line.startswith("# CoFI"):
+                            method_tree = line[8:].strip().split(" -> ")
+                        elif line.startswith("# description:"):
+                            description = line[14:]
+                    print(method_name)
+                    print(method_tree)
+                    print(description)
+                    methods.append(Method(method_name, method_path, method_tree, description))
+        print(type(methods))
+        print(methods)
+        # Inference applications in CoFI
         for root, dirs, files in os.walk(self._app_path):
             if root == self._app_path:
-                for dirr in dirs:
-                    if dirr not in ignore:
-                        app_path = self._app_path + '/' + dirr + '/' + dirr + '.py'
-                        r = open(app_path)
+                for dir_name in dirs:
+                    if dir_name not in ignore:
+                        app_path = os.path.join(self._app_path, dir_name, dir_name + ".py")
                         if os.path.exists(app_path):
                             app_name = r.readline().strip('\n')[2:]
                             app_tree = r.readline().strip('\n')[2:].split(" -> ")
