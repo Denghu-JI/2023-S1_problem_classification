@@ -33,9 +33,8 @@ class pysearch:
         return self._apps
 
     def search(self, ignore):
-        methods = []  # Store the found methods
-        apps = []  # Store the found apps
-        print(methods)
+        # methods = []  # Store the found methods
+        # apps = []  # Store the found apps
 
         # Inference methods in CoFI
         for root, _, files in os.walk(self._method_path):
@@ -46,7 +45,6 @@ class pysearch:
                     method_path = os.path.join(root, method)
                     with open(method_path) as file:
                         lines = file.readlines()
-                        print(lines)
 
                     method_name = ""
                     method_tree = []
@@ -63,10 +61,7 @@ class pysearch:
                     print(method_name)
                     print(method_tree)
                     print(description)
-                    methods.append(Method(method_name, method_path, method_tree, description))
-        print(type(methods))
-        print(methods)
-        
+                    self._methods.append(Method(method_name, method_path, method_tree, description))
         # Inference applications in CoFI
         for root, dirs, files in os.walk(self._app_path):
             if root == self._app_path:
