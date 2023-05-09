@@ -184,7 +184,44 @@ def load_to_dict(node, res):
     res[node.me()] = node.to_pos()
     for i in node.children():
         load_to_dict(i, res)
-#----------------------test
+#----------------------
+
+def description(node):
+    res = {}
+    pack_des(res,node)
+    return res
+
+def pack_des(dict,node):
+    dict[node.me()] = node.description()
+    if node.children():
+        for i in node.children():
+            pack_des(dict,i)
+
+#-------------------------
+def relation_dict(node):
+    res = []
+    relation_pack(res,node)
+    return res
+
+def relation_pack(lst, node):
+    for i in node.children():
+        node_dict = {}
+        node_dict["id"] = i.me()
+        node_dict["text"] = i.me()
+        node_dict["parent"] = node.me()
+        node_dict["children"] = []
+        if i.children():
+            for j in i.children():
+                relation_pack(lst,j)
+                node_dict["children"].append(j.me())
+        lst.append(node_dict)
+
+
+
+
+
+#------------------------
+
 
 # tokens1 = ['cofi_simple_newton', 'simple Newton step', 'InLab', 'non-linear', 'optimization', 'parameter estimation', 'CoFI']
 # tokens2 = ['pygimli_dcip_century_tri_mesh.ipynb', 'Newton conjugate gradient trust-region algorithm (trust-ncg)', 'scipy.optimize.minimize',  'non-linear', 'optimization', 'parameter estimation', 'CoFI']
