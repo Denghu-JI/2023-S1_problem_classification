@@ -4,41 +4,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>treeComponent</title>
     <script type="text/javascript">
-        function getBackend() {
-            // Send a request to the backend API to fetch the methods list based on the description
-            var description = sessionStorage.getItem('searchkey'); 
-            /*tree_app = loadJSON('https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/data-apps.json')  
-            fetch(`/api/methods?description=${encodeURIComponent(description)}`)
-            .then(response => response.json()) //Convert the response to JSON
-            .then(methods =>{
-            //Get the unordered list element for the methods
-            const methodsList = document.getElementById("methods");
-            //Clear the list content
-            methodsList.innerHTML = "";
-            //Iterate through the fetched methods list
-            methods.forEach(method => {
-            //Create a new list item element
-            const item = document.createElement("li");
-            //Set the list item content to the method name
-            item.textContent = method.name;
-            //Append the newly created list item to the methods list
-            methodList.appendChild(item);});}) 
-            //Catch the potential error
-            .catch(error => console.error(error)) */
-        if (description == ""){
-            alert("no keyword provided")
-        }
-        else{
-            alert(description)
-        }   
-        }
-        window.onload = getBackend;
-        </script>
+        // array to store data from backend
+        let testdata = [];
+    </script>
 </head>
 <!-- Add un-tree js -->
 <script src="./un-tree.min.js"></script>
 <script src="./jquery.js"></script>
 <script src="./html2canvas.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <body>
     <!-- Load button, for testing -->
@@ -86,8 +60,26 @@
     }
 </style>
 <script type="text/javascript">
-
-
+    // read data from server into the dataset
+    function preload(){
+        let url = 'https://jsonofthetree.s3.ap-southeast-2.amazonaws.com/method_relation.json';
+        //get data as json
+        $.getJSON(url, function(readdata){
+            alert("ok");
+            //read data into dataset
+            for (let i = 0; i < readdata.length; i++){ 
+                ele = {};
+                ele.id = readdata[i].id;
+                ele.text = readdata[i].text;
+                ele.parent = readdata[i].parent;
+                ele.children = [];
+                testdata[i] = ele;}
+            }
+        )
+    ;}
+    //load dataset
+    window.onload = preload;
+    alert("hello");
 
     // Default data for the test
     let data = [
