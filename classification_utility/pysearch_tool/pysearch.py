@@ -2,7 +2,15 @@
 #import subprocess
 #(might delete if never used) import pathlib
 import os
+import yaml
 
+method_headfix = "https://github.com/inlab-geo/cofi/blob/main"
+
+application_headfix = "https://github.com/inlab-geo/espresso/tree/main"
+folder_name = "contrib"
+
+
+example_headfix = "https://github.com/inlab-geo/cofi-examples/tree/main/examples"
 
 class pysearch:
     def __init__(self, methods_path, app_path, prob_path):
@@ -25,12 +33,16 @@ class pysearch:
         self._prob_path = prob_path
         self._methods = []
         self._apps = []
+        self._examples = []
 
     def mds(self):
         return self._methods
     
     def aps(self):
         return self._apps
+
+    def examples(self):
+        return self._examples
 
     def search(self, ignore):
         # methods = []  # Store the found methods
@@ -58,9 +70,6 @@ class pysearch:
                             method_tree = line[10:].strip().split(" -> ")
                         elif line.startswith("# description:"):
                             description = line[15:]
-                    print(method_name)
-                    print(method_tree)
-                    print(description)
                     self._methods.append(Method(method_name, method_path, method_tree, description))
         # Inference applications in CoFI
         for root, dirs, files in os.walk(self._app_path):
@@ -74,7 +83,6 @@ class pysearch:
                             app_tree = r.readline().strip('\n')[2:].split(" -> ")
                             app_des = r.readline().strip('\n')[15:]
                             self._apps.append(App(app_name, app_path, app_tree, app_des))
-                            print(app_tree)
     
     def _search(self):
 
@@ -88,13 +96,14 @@ class pysearch:
                             method_name = line.strip('\n')[11:]
                             method_tree = file.readline().strip('\n')[2:].split(" -> ")
                             method_description = file.readline().strip('\n')[15:]
-                            method = Method(method_name, file_path, method_tree, method_description)
+                            method = Method(method_name, method_headfix + file_path[18:], method_tree, method_description)
                             self._methods.append(method)
                         if line[0:16] == "# Application : ":
                             app_name = line.strip('\n')[16:]
                             app_tree = file.readline().strip('\n')[2:].split(" -> ")
                             app_des = file.readline().strip('\n')[15:]
-                            self._apps.append(App(app_name, file_path, app_tree, app_des))                    
+                            app_path = application_headfix + file_path[22:]
+                            self._apps.append(App(app_name, app_path, app_tree, app_des))                    
                     else:
                         break
 
@@ -107,6 +116,19 @@ class pysearch:
             if root == self._app_path:
                 for dirr in dirs:
                     parse(self._app_path + '/' + dirr + '/' + dirr + '.py')
+        
+        for root, dirs, files in os.walk(self._prob_path):
+            if root == self._prob_path:
+                for dirr in dirs:
+                    try:
+                        path = self._prob_path + '/' + dirr + '/'
+                        with open(path + 'meta.yml', 'r') as file:
+                            data = yaml.safe_load(file)
+                            self._examples.append(App(data["notebook"][0]['title'],example_headfix + '/' + dirr, data['notebook'][0]['application domain'].split(" -> "), data['notebook'][0]['description']))
+                    except Exception as e:
+                        pass
+
+            break
 
         
 class Method:
@@ -141,6 +163,38 @@ class Method:
         return self._des
     
 class App:
+    def __init__(self, name, path, tree, des):
+        """
+        A single Method defination.
+
+        Parameters
+        -----------
+        name : str
+            method name
+        path : str
+            method file path
+        tree : list
+            tree path of the method
+        """
+        self._name = name
+        self._path = path
+        self._tree = tree
+        self._des = des
+    
+    def name(self):
+        return self._name
+    
+    def path(self):
+        return self._path
+    
+    def tree(self):
+        return self._tree
+    
+    def des(self):
+        return self._des
+
+
+class Example:
     def __init__(self, name, path, tree, des):
         """
         A single Method defination.

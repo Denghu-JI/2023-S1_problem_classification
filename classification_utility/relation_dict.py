@@ -30,7 +30,7 @@
 #         pygimli_dcip.ipynb <- RAdam <- torch.optim <- non-linear <- optimization <- parameter estimation <- CoFI
 
 tokens = {} #key: token id
-
+textSize = 22
 
 class hirc_tree:
     def __init__(self, me):
@@ -52,10 +52,11 @@ class hirc_tree:
         self._description = None
 
         #---graphics property
-        self.x = 0
-        self.y = 0
+        self.x = None
+        self.y = None
         self.modifier = 0
-        self.width = 280
+        self.width = max(220,len(me) * 22)
+        self.ch_width = 0
 
     def me(self):
         return self._me
@@ -149,25 +150,31 @@ def create_layers(node):
     add_to_layer(node)
     return layers
 
-def assign_coordinates(tree, separation_x=2, separation_y=150):
+def assign_coordinates(tree, separation_x=20, separation_y=150):
     layers = create_layers(tree)
     res = []
-    for depth in layers.keys():
-        res.append(sum([i.width for i in layers[depth]]))
-    max_layer_width = max(res)
+    center = 0
+    temp_parent_node_x = {}
+    for layer in list(layers.keys())[::-1]:
+        assign_node_in_layer(layers[layer],center,separation_x)
 
-    y = 0
-    for depth, layer in layers.items():
-        x = 0
-        layer_width = sum([i.width for i in layers[depth]])
-        extra_space = (max_layer_width - layer_width) * separation_x / 2
 
-        for node in layer:
-            node.x = x * (separation_x + node.width) + extra_space
-            node.y = y * separation_y
-            x += 1
+def assign_node_in_layer(nodes, center, separation_x):
+    for node in nodes:
+        print(node.me())
 
-        y += 1
+    layter_width = sum([max(node.width, node.ch_width) for node in nodes]) + (len(nodes) - 1) * separation_x
+    start_x = center - layter_width / 2
+    for node in nodes:
+        print(start_x)
+        if (node.x) :
+            start_x += node.ch_width
+        else:
+            node.x = start_x
+            start_x += max(node.width, node.ch_width) + separation_x
+
+
+
 
 def dict_package(node):
     res = {}
@@ -199,22 +206,19 @@ def pack_des(dict,node):
 
 #-------------------------
 def relation_dict(node):
-    res = []
-    relation_pack(res,node)
-    return res
+    return relation_pack(node)
 
-def relation_pack(lst, node):
-    for i in node.children():
-        node_dict = {}
-        node_dict["id"] = i.me()
-        node_dict["text"] = i.me()
-        node_dict["parent"] = node.me()
-        node_dict["children"] = []
-        if i.children():
-            for j in i.children():
-                relation_pack(lst,j)
-                node_dict["children"].append(j.me())
-        lst.append(node_dict)
+def relation_pack(node):
+    node_dict = {}
+    node_dict["name"] = node.me()
+    node_dict["link_git"] = node.path()
+    node_dict["link_doc"] = "www.google.com.au"
+    node_dict["children"] = []
+    node_dict["description"] = node.description()
+    if node.children():
+        for j in node.children():
+            node_dict["children"].append(relation_pack(j))
+    return node_dict
 
 
 

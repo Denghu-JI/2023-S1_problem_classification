@@ -1,6 +1,7 @@
 from relation_dict import hirc_tree, insert, assign_depth, build_pos, assign_coordinates, dict_package, description, relation_dict
 from pysearch_tool import pysearch
 import json
+import sys
 import boto3
 
 #please specify those folder!
@@ -73,12 +74,25 @@ def main():
         else:
             print("not a vaild command")
 
+
+
+
+def load_key():
+    if len(sys.argv) != 3:
+        print("Usage: python interface.py <public_key> <secret_key>")
+        sys.exit()
+    public_key = sys.argv[1]
+    secret_key = sys.argv[2]
+    return public_key, secret_key
+
 if __name__ == "__main__": 
     # main()
+    pk, sk = load_key()
     p = pysearch.pysearch(methods_path,applications_path,problems_path)
     p._search()
     method_tree = hirc_tree('CoFI')
     apps_tree = hirc_tree('37 Earth Sciences')
+    example_tree = hirc_tree('37 Earth Sciences')
 
     for i in p.mds():
         method_tree = insert(method_tree,i)
@@ -86,51 +100,21 @@ if __name__ == "__main__":
     for i in p.aps():
         apps_tree = insert(apps_tree,i)
     
-    assign_coordinates(apps_tree)
-    assign_coordinates(method_tree)
-    method_dt = dict_package(method_tree)
-    app_dt = dict_package(apps_tree)
-
-    des_method = description(method_tree)
-    des_app = description(apps_tree)
+    for i in p.examples():
+        example_tree = insert(example_tree,i)
 
 
-
-    method_dt_key = 'data-methods.json'
-    app_dt_key = 'data-apps.json'
-    method_des_key = 'des-methods.json'
-    app_des_key = 'des-apps.json'
-    method_path_key = 'path_method.json'
-    app_path_key = 'path_apps.json'
-
-    with open(method_dt_key, 'w') as fp:
-        json.dump(method_dt, fp)
-
-    with open(app_dt_key, 'w') as fp:
-        json.dump(app_dt, fp)
-
-    with open(method_des_key, 'w') as fp:
-        json.dump(des_method, fp)
-    
-    with open(app_des_key, 'w') as fp:
-        json.dump(des_app, fp)
-
-    json_methods_dt = json.dumps(method_dt)
-    json_apps_dt = json.dumps(app_dt)
-
-
-    s3 = boto3.client('s3')
+    s3 = boto3.client('s3', aws_access_key_id=pk,aws_secret_access_key=sk)
     bucket_name = 'jsonofthetree'
     json_key = 'data.json'
 
-    s3.put_object(Bucket=bucket_name, Key=method_dt_key, Body=json_methods_dt, ACL='public-read')
-    s3.put_object(Bucket=bucket_name, Key=app_dt_key, Body=json_apps_dt, ACL='public-read')
-
     method_rel_key = "method_relation.json"
     app_rel_key = "app_relation.json"
+    example_rel_key = "example_relation.json"
 
     relation_method = relation_dict(method_tree)
     relation_app = relation_dict(apps_tree)
+    relation_example = relation_dict(example_tree)
 
     with open(method_rel_key, 'w') as fp:
         json.dump(relation_method, fp)
@@ -138,8 +122,13 @@ if __name__ == "__main__":
     with open(app_rel_key, 'w') as fp:
         json.dump(relation_app, fp)
 
+    with open(example_rel_key, 'w') as fp:
+        json.dump(relation_example, fp)
+
     json_relation_method = json.dumps(relation_method)
     json_relation_app = json.dumps(relation_app)
+    json_relation_example = json.dumps(relation_example)
 
     s3.put_object(Bucket=bucket_name, Key=method_rel_key, Body=json_relation_method, ACL='public-read')
     s3.put_object(Bucket=bucket_name, Key=app_rel_key, Body=json_relation_app, ACL='public-read')
+    s3.put_object(Bucket=bucket_name, Key=example_rel_key, Body=json_relation_example, ACL='public-read')
